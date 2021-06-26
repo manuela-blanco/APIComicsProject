@@ -1,7 +1,6 @@
 package br.com.zup.comics.controller;
 
 import java.text.ParseException;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.zup.comics.entity.ComicEntity;
 import br.com.zup.comics.entity.UserComicEntity;
 import br.com.zup.comics.entity.UserEntity;
 import br.com.zup.comics.model.User;
@@ -41,16 +39,17 @@ public class UserController {
 		return userEntity != null ? ResponseEntity.status(HttpStatus.CREATED).body(userEntity) : ResponseEntity.badRequest().build();
 	}
 	
-	@GetMapping("/associate/{userId}/comic/{comicId}")
-	public ResponseEntity<UserComicEntity> associate(@PathVariable Long userId, @PathVariable Long comicId) {
+	@PostMapping("/associate/{userId}/comic/{apiComicId}")
+	public ResponseEntity<UserComicEntity> associate(@PathVariable Long userId, @PathVariable Long apiComicId) {
 		
-		UserComicEntity userComicEntity = this.userService.associate(this.userService.findById(userId), this.comicService.fetchDataFromMarvel(comicId));
+		UserComicEntity userComicEntity = this.userService.associate(this.userService.findById(userId), this.comicService.fetchDataFromMarvel(apiComicId));
 		return userComicEntity != null ? ResponseEntity.status(HttpStatus.CREATED).body(userComicEntity) : ResponseEntity.badRequest().build();
 	}
 	
 	@GetMapping("/{userId}/listComics")
-	public ResponseEntity<List<ComicEntity>> listComics(@PathVariable Long userId) {
-		List<ComicEntity> allComics = this.comicService.listAll(userId);
-		return allComics != null ? ResponseEntity.status(HttpStatus.FOUND).body(allComics) : ResponseEntity.notFound().build();
+	public ResponseEntity<UserEntity> listComics(@PathVariable Long userId) {
+		UserEntity userEntity = this.userService.findById(userId);
+		this.userService.findRegisteredComics(userEntity);
+		return userEntity != null ? ResponseEntity.status(HttpStatus.OK).body(userEntity) : ResponseEntity.notFound().build();
 	}
 }

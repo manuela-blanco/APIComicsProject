@@ -24,6 +24,9 @@ public class UserService {
 	private UserComicRepository userComicRepository;
 	
 	@Autowired
+	private ComicService comicService;
+	
+	@Autowired
 	private ConverterService converter;
 	
 	public UserEntity findById(Long userId) {
@@ -48,6 +51,10 @@ public class UserService {
 		ucEntity.setUserId(userEntity.getId());
 		this.userComicRepository.save(ucEntity);
 		return ucEntity;
+	}
+	
+	public void findRegisteredComics(UserEntity userEntity) {
+		userEntity.setRegisteredComics(comicService.listAll(userEntity.getId()));
 	}
 
 }
