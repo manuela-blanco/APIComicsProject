@@ -24,6 +24,8 @@ public class ComicEntity {
 	private String diaDesconto;
 	@Column(name = "desconto_ativo")
 	private boolean descontoAtivo;
+	@Column(name = "online_purchased_price")
+	private boolean onlinePurchasedPrice;
 	
 	public String getDescricao() {
 		return descricao;
@@ -53,6 +55,10 @@ public class ComicEntity {
 		return descontoAtivo;
 	}
 	
+	public boolean getOnlinePurchasedPrice() {
+		return this.onlinePurchasedPrice;
+	}
+	
 	public void setDescontoAtivo(boolean descontoAtivo) {
 		this.descontoAtivo = descontoAtivo;
 	}
@@ -77,5 +83,8 @@ public class ComicEntity {
 		this.titulo = titulo;
 	}
 
+	public void setOnlinePurchasedPrice(boolean onlinePurchasedPrice) {
+		this.onlinePurchasedPrice = onlinePurchasedPrice;
+	}
 	
 }

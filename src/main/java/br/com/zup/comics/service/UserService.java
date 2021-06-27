@@ -70,18 +70,24 @@ public class UserService {
 	}
 
 	public User findComicsAndAuthors(UserEntity userEntity) {
-		List<ComicEntity> comics = this.comicRepository.findAllByUserId(userEntity.getId());
-		User user = this.converter.convert(userEntity, User.class);
-		for(ComicEntity comicEntity : comics) {
-			List<AuthorEntity> autoresEntity = this.authorRepository.findAllByComicId(comicEntity.getId());
-			List<Author> autores = this.converter.convertList(autoresEntity, Author.class);
-			Comic comic = this.converter.convert(comicEntity, Comic.class);
-			comic.setAutores(autores);
-			this.comicService.verifyDesconto(comic);
-			user.getRegisteredComics().add(comic);	
+		if(Objects.nonNull(userEntity)) {
+		
+			List<ComicEntity> comics = this.comicRepository.findAllByUserId(userEntity.getId());
+			User user = this.converter.convert(userEntity, User.class);
+			for(ComicEntity comicEntity : comics) {
+				List<AuthorEntity> autoresEntity = this.authorRepository.findAllByComicId(comicEntity.getId());
+				List<Author> autores = this.converter.convertList(autoresEntity, Author.class);
+				Comic comic = this.converter.convert(comicEntity, Comic.class);
+				comic.setAutores(autores);
+				this.comicService.verifyDesconto(comic);
+				this.comicService.checkPreco(comic);
+				user.getRegisteredComics().add(comic);	
+			}
+		
+			return user;
 		}
-	
-		return user;
+		
+		return null;
 	}
 
 }

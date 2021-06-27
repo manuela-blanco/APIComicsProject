@@ -60,7 +60,6 @@ public class ComicService {
 		Comic comic = comicResponse.getBody();
 		ComicEntity comicFound = this.comicRepository.findByTitulo(comic.getTitulo());
 		if(Objects.isNull(comicFound)) {
-			this.verifyDesconto(comic);
 			ComicEntity comicEntity = this.create(comic);
 			this.authorService.create(comic.getAutores(), comicEntity);
 			return comicEntity;
@@ -76,6 +75,19 @@ public class ComicService {
 			}
 		}
 		
+	}
+	
+	protected void checkPreco(Comic comic) {
+		if(comic.getDescontoAtivo()) {
+			comic.setPreco(comic.precoComDesconto());
+			return;
+		}
+		
+		ComicEntity comicEntity = this.comicRepository.findByTitulo(comic.getTitulo());
+		
+		if(comic.getPreco() != comicEntity.getPreco()) {
+			comic.setPreco(comicEntity.getPreco());
+		}
 	}
 
 	public String hashCredentials(String credentials) {

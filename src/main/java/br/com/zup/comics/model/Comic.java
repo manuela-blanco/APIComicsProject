@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -12,6 +13,7 @@ import br.com.zup.comics.utils.Day;
 public class Comic {
 	private String titulo;
 	private double preco;
+	private boolean onlinePurchasedPrice;
 	private List<Author> autores;
 	private String isbn;
 	private String descricao;
@@ -61,14 +63,6 @@ public class Comic {
 		}
 	}
 	
-	private void calculoPreco() {
-		if(descontoAtivo) {
-			preco = preco * (1 - PORCENTAGEM_DESCONTO);
-		}
-		
-		preco = preco * (1 + PORCENTAGEM_DESCONTO);
-	}
-	
 	public void calculoDescontoAtivo() {
 		String currentDayOfTheWeek = LocalDate.now().getDayOfWeek().name();
 		if(currentDayOfTheWeek.equals(this.diaDesconto.name())) {
@@ -76,7 +70,6 @@ public class Comic {
 		} 
 		
 		descontoAtivo = false;
-		calculoPreco();
 	}
 	
 	public List<Author> getAutores() {
@@ -165,7 +158,26 @@ public class Comic {
 	private void verifyPrice(ArrayList<Map<String, Object>> prices) {
 		Map<String, Object> printPrice = prices.get(0);
 		String price = printPrice.get("price").toString();
+		if(Double.valueOf(price) == 0.0 && prices.size() > 1) {
+			this.preco = Double.valueOf(prices.get(1).get("price").toString());
+			this.setOnlinePurchasedPrice(true);
+			return;
+		}
+		
 		this.preco = Double.valueOf(price);
+		this.setOnlinePurchasedPrice(false);
+	}
+
+	public double precoComDesconto() {
+		return preco * (1 - PORCENTAGEM_DESCONTO);
+	}
+
+	public boolean isOnlinePurchasedPrice() {
+		return onlinePurchasedPrice;
+	}
+
+	public void setOnlinePurchasedPrice(boolean onlinePurchasedPrice) {
+		this.onlinePurchasedPrice = onlinePurchasedPrice;
 	}
 
 }
