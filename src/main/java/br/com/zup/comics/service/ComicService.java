@@ -68,7 +68,7 @@ public class ComicService {
 		return comicFound;
 	}
 	
-	private void verifyDesconto(Comic comic) {
+	protected void verifyDesconto(Comic comic) {
 		if(Objects.nonNull(comic)) {
 			if(Strings.isNotBlank(comic.getIsbn())) {
 				comic.calculoDiaDesconto();
@@ -85,4 +85,5 @@ public class ComicService {
 	public List<ComicEntity> listAll(Long userId) {
 		return this.comicRepository.findAllByUserId(userId);		
 	}
+
 }

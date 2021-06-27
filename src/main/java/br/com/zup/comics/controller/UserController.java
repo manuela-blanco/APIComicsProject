@@ -47,9 +47,8 @@ public class UserController {
 	}
 	
 	@GetMapping("/{userId}/listComics")
-	public ResponseEntity<UserEntity> listComics(@PathVariable Long userId) {
-		UserEntity userEntity = this.userService.findById(userId);
-		this.userService.findRegisteredComics(userEntity);
-		return userEntity != null ? ResponseEntity.status(HttpStatus.OK).body(userEntity) : ResponseEntity.notFound().build();
+	public ResponseEntity<User> listComics(@PathVariable Long userId) {
+		User user = this.userService.findComicsAndAuthors(this.userService.findById(userId));
+		return user != null ? ResponseEntity.status(HttpStatus.OK).body(user) : ResponseEntity.notFound().build();
 	}
 }

@@ -1,6 +1,7 @@
 package br.com.zup.comics.entity;
 
 
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -8,11 +9,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+
 @Entity
 @Table(name = "Comic")
 public class ComicEntity {
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	private String titulo;
 	private double preco;
@@ -51,7 +53,6 @@ public class ComicEntity {
 		return descontoAtivo;
 	}
 	
-	
 	public void setDescontoAtivo(boolean descontoAtivo) {
 		this.descontoAtivo = descontoAtivo;
 	}
@@ -75,5 +76,6 @@ public class ComicEntity {
 	public void setTitulo(String titulo) {
 		this.titulo = titulo;
 	}
+
 	
 }

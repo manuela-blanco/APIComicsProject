@@ -12,7 +12,7 @@ import br.com.zup.comics.utils.Day;
 public class Comic {
 	private String titulo;
 	private double preco;
-	private List<String> autores;
+	private List<Author> autores;
 	private String isbn;
 	private String descricao;
 	private Day diaDesconto;
@@ -23,7 +23,7 @@ public class Comic {
 		this.autores = new ArrayList<>();
 	}
 	
-	public Comic(String titulo, double preco, List<String> autores, 
+	public Comic(String titulo, double preco, List<Author> autores, 
 			String isbn, String descricao) {
 		
 		this.titulo = titulo;
@@ -79,7 +79,7 @@ public class Comic {
 		calculoPreco();
 	}
 	
-	public List<String> getAutores() {
+	public List<Author> getAutores() {
 		return autores;
 	}
 	
@@ -107,7 +107,7 @@ public class Comic {
 		return descontoAtivo;
 	}
 	
-	public void setAutores(List<String> autores) {
+	public void setAutores(List<Author> autores) {
 		this.autores = autores;
 	}
 	
@@ -135,7 +135,7 @@ public class Comic {
 		this.diaDesconto = day;
 	}
 	
-	public void addAuthor(String author) {
+	public void addAuthor(Author author) {
 		this.autores.add(author);
 	}
 	
@@ -156,18 +156,16 @@ public class Comic {
 	
 	private void unpackNestedAuthors(ArrayList<Map<String, Object>> allAuthors) {
 		for(Map<String, Object> authorItem : allAuthors) {
-			String author = (String) authorItem.get("name");
+			String authorName = (String) authorItem.get("name");
+			Author author = new Author(authorName);
 			this.addAuthor(author);
 		}
 	}
 	
 	private void verifyPrice(ArrayList<Map<String, Object>> prices) {
 		Map<String, Object> printPrice = prices.get(0);
-		if((int) printPrice.get("price") == 0) {
-			this.preco = (int) printPrice.get("price");
-			return;
-		} 
-		this.preco = (double) printPrice.get("price");
+		String price = printPrice.get("price").toString();
+		this.preco = Double.valueOf(price);
 	}
 
 }

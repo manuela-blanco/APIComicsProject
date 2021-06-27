@@ -1,15 +1,12 @@
 package br.com.zup.comics.entity;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -17,7 +14,7 @@ import javax.persistence.Table;
 public class UserEntity {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	private String nome;
 	@Column(unique=true)
@@ -26,8 +23,6 @@ public class UserEntity {
 	private String cpf;
 	@Column(name = "data_nascimento")
 	private Date dataNascimento;
-	@ManyToMany
-	private List<ComicEntity> registeredComics = new ArrayList<>();
 		
 	public Long getId() {
 		return id;
@@ -65,11 +60,4 @@ public class UserEntity {
 		this.nome = nome;
 	}
 
-	public List<ComicEntity> getRegisteredComics() {
-		return registeredComics;
-	}
-
-	public void setRegisteredComics(List<ComicEntity> list) {
-		this.registeredComics = list;
-	}
 }
