@@ -46,11 +46,15 @@ public class UserService {
 	}
 
 	public UserComicEntity associate(UserEntity userEntity, ComicEntity comicEntity) {
-		UserComicEntity ucEntity = new UserComicEntity();
-		ucEntity.setComicId(comicEntity.getId());
-		ucEntity.setUserId(userEntity.getId());
-		this.userComicRepository.save(ucEntity);
-		return ucEntity;
+		UserComicEntity uceFound = this.userComicRepository.findByIds(userEntity.getId(), comicEntity.getId());
+		if(Objects.isNull(uceFound)) {
+			UserComicEntity ucEntity = new UserComicEntity();
+			ucEntity.setComicId(comicEntity.getId());
+			ucEntity.setUserId(userEntity.getId());
+			this.userComicRepository.save(ucEntity);		
+			return ucEntity;
+		}
+		return uceFound;
 	}
 	
 	public void findRegisteredComics(UserEntity userEntity) {

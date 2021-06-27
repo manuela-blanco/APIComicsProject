@@ -15,4 +15,6 @@ public interface ComicRepository extends JpaRepository<ComicEntity, Long> {
 	@Query(value = "SELECT * FROM Comic c INNER JOIN user_comic uc on (uc.user_id = ?1 and c.id = comic_id)", 
 			  nativeQuery = true)
 	public List<ComicEntity> findAllByUserId(Long userId);
+	
+	public ComicEntity findByTitulo(String titulo);
 }

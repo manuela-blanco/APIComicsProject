@@ -56,13 +56,16 @@ public class ComicService {
 		String hash = hashCredentials(timestamp + privateKey + publicKey);
 		String url = BASE_URL + "/" + comicId + "?ts=" + timestamp + "&apikey=" + publicKey
 				+ "&hash=" + hash;
-		System.out.println(url);
 		ResponseEntity<Comic> comicResponse = restTemplate.getForEntity(url, Comic.class);
 		Comic comic = comicResponse.getBody();
-		this.verifyDesconto(comic);
-		ComicEntity comicEntity = this.create(comic);
-		this.authorService.create(comic.getAutores(), comicEntity);
-		return comicEntity;
+		ComicEntity comicFound = this.comicRepository.findByTitulo(comic.getTitulo());
+		if(Objects.isNull(comicFound)) {
+			this.verifyDesconto(comic);
+			ComicEntity comicEntity = this.create(comic);
+			this.authorService.create(comic.getAutores(), comicEntity);
+			return comicEntity;
+		}
+		return comicFound;
 	}
 	
 	private void verifyDesconto(Comic comic) {
