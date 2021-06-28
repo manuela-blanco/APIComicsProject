@@ -1,0 +1,2 @@
+CREATE TABLE User (id int not null auto_increment, nome VARCHAR(120) not null,
+       email VARCHAR(120) not null UNIQUE, cpf varchar(14) not null UNIQUE, data_nascimento DATE not null, primary key(id));

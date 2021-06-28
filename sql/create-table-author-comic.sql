@@ -1,0 +1,2 @@
+CREATE TABLE author_comic (id int not null auto_increment, author_id int not null, comic_id int not null, 
+primary key(id), FOREIGN KEY (author_id) REFERENCES Author(id), FOREIGN KEY (comic_id) REFERENCES Comic(id));

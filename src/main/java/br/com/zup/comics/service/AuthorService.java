@@ -1,6 +1,7 @@
 package br.com.zup.comics.service;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,8 +24,11 @@ public class AuthorService {
 
 	public void create(List<Author> autores, ComicEntity comicEntity) {
 		for(Author author : autores) {
-			AuthorEntity authorEntity = new AuthorEntity(author.getNome());
-			authorRepository.save(authorEntity);
+			AuthorEntity authorEntity = this.authorRepository.findByNome(author.getNome());
+			if(Objects.isNull(authorEntity)) {
+				authorEntity = new AuthorEntity(author.getNome());
+				authorRepository.save(authorEntity);
+			}
 			AuthorComicEntity authorComicEntity = new AuthorComicEntity();
 			authorComicEntity.setAuthorId(authorEntity.getId());
 			authorComicEntity.setComicId(comicEntity.getId());
