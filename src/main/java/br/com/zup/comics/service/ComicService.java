@@ -7,20 +7,18 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import br.com.zup.comics.entity.ComicEntity;
+import br.com.zup.comics.feign.client.MarvelAPIClient;
 import br.com.zup.comics.model.Comic;
 import br.com.zup.comics.repository.ComicRepository;
 import br.com.zup.comics.utils.ConverterService;
 
 @Service
 public class ComicService {
-	
-	private final static String BASE_URL = "http://gateway.marvel.com/v1/public/comics";
-	
+		
 	@Value("${marvel.api.public.key}")
 	private String publicKey;
 	
@@ -42,6 +40,9 @@ public class ComicService {
 	@Autowired
 	private ConverterService converter;
 	
+	@Autowired
+	private MarvelAPIClient marvelAPIClient;
+	
 	public ComicEntity create(Comic comic) {
 		if(Objects.nonNull(comic)) {
 			ComicEntity comicEntity = this.converter.convert(comic, ComicEntity.class);
@@ -54,10 +55,7 @@ public class ComicService {
 	
 	public ComicEntity fetchDataFromMarvel(Long comicId) {
 		String hash = hashCredentials(timestamp + privateKey + publicKey);
-		String url = BASE_URL + "/" + comicId + "?ts=" + timestamp + "&apikey=" + publicKey
-				+ "&hash=" + hash;
-		ResponseEntity<Comic> comicResponse = restTemplate.getForEntity(url, Comic.class);
-		Comic comic = comicResponse.getBody();
+		Comic comic = marvelAPIClient.getComicById(comicId, timestamp, publicKey, hash);
 		ComicEntity comicFound = this.comicRepository.findByTitulo(comic.getTitulo());
 		if(Objects.isNull(comicFound)) {
 			ComicEntity comicEntity = this.create(comic);
