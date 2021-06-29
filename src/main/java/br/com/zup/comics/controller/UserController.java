@@ -35,14 +35,16 @@ public class UserController {
 
 	@PostMapping("/register")
 	public ResponseEntity<?> create(@RequestBody(required = true) Map<String, String> userData) throws ParseException {
-		UserEntity userEntity = this.userService.create(new User(userData.get("name"), userData.get("email"), userData.get("cpf"), formatador.formata(userData.get("dataNascimento"))));
+		UserEntity userEntity = this.userService.create(new User(userData.get("name"), 
+				userData.get("email"), userData.get("cpf"), formatador.formata(userData.get("dataNascimento"))));
 		return userEntity != null ? ResponseEntity.status(HttpStatus.CREATED).body(userEntity) : ResponseEntity.badRequest().body("Este cpf/e-mail já está associado a uma conta.");
 	}
 	
 	@PostMapping("/associate/{userId}/comic/{apiComicId}")
 	public ResponseEntity<UserComicEntity> associate(@PathVariable Long userId, @PathVariable Long apiComicId) {
 		
-		UserComicEntity userComicEntity = this.userService.associate(this.userService.findById(userId), this.comicService.fetchDataFromMarvel(apiComicId));
+		UserComicEntity userComicEntity = this.userService.associate(this.userService.findById(userId), 
+				this.comicService.fetchDataFromMarvel(apiComicId));
 		return userComicEntity != null ? ResponseEntity.status(HttpStatus.CREATED).body(userComicEntity) : ResponseEntity.badRequest().build();
 	}
 	
