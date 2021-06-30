@@ -27,9 +27,6 @@ public class ComicService {
 	
 	@Value("${marvel.api.timestamp}")
 	private String timestamp;
-
-	@Autowired
-    public RestTemplate restTemplate;
 	
 	@Autowired
 	private ComicRepository comicRepository;

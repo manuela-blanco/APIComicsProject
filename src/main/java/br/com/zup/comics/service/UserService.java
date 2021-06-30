@@ -1,9 +1,11 @@
 package br.com.zup.comics.service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -59,6 +61,15 @@ public class UserService {
 		}
 		
 		return null;
+	}
+	
+	public boolean verifyData(Map<String, String> userData) {
+		if(Objects.isNull(userData.get("name")) || Strings.isEmpty(userData.get("name"))) return false;
+		if(Objects.isNull(userData.get("email")) || Strings.isEmpty(userData.get("email"))) return false;
+		if(Objects.isNull(userData.get("dataNascimento")) || Strings.isEmpty(userData.get("dataNascimento"))) return false;
+		if(Objects.isNull(userData.get("cpf")) || Strings.isEmpty(userData.get("cpf"))) return false;
+		
+		return true;
 	}
 
 	public UserComicEntity associate(UserEntity userEntity, ComicEntity comicEntity) {

@@ -35,9 +35,15 @@ public class UserController {
 
 	@PostMapping("/register")
 	public ResponseEntity<?> create(@RequestBody(required = true) Map<String, String> userData) throws ParseException {
-		UserEntity userEntity = this.userService.create(new User(userData.get("name"), 
-				userData.get("email"), userData.get("cpf"), formatador.formata(userData.get("dataNascimento"))));
-		return userEntity != null ? ResponseEntity.status(HttpStatus.CREATED).body(userEntity) : ResponseEntity.badRequest().body("Este cpf/e-mail já está associado a uma conta.");
+		if(this.userService.verifyData(userData)) {
+			UserEntity userEntity = this.userService.create(new User(userData.get("name"), 
+					userData.get("email"), userData.get("cpf"), formatador.formata(userData.get("dataNascimento"))));
+			return userEntity != null ? 
+					ResponseEntity.status(HttpStatus.CREATED).body(userEntity) : 
+						ResponseEntity.badRequest().body("Este cpf/e-mail já está associado a uma conta.");
+		}
+
+		return ResponseEntity.badRequest().body("Por favor informar todos os dados do usuário.");
 	}
 	
 	@PostMapping("/associate/{userId}/comic/{apiComicId}")
@@ -51,6 +57,7 @@ public class UserController {
 	@GetMapping("/{userId}/listComics")
 	public ResponseEntity<?> listComics(@PathVariable Long userId) {
 		User user = this.userService.findComicsAndAuthors(this.userService.findById(userId));
-		return user != null ? ResponseEntity.status(HttpStatus.OK).body(user) : ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado.");
+		return user != null ? 
+				ResponseEntity.status(HttpStatus.OK).body(user) : ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado.");
 	}
 }
