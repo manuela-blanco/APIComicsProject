@@ -17,9 +17,7 @@ public class UserEntity {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	private String nome;
-	@Column(unique=true)
 	private String email;
-	@Column(unique=true)
 	private String cpf;
 	@Column(name = "data_nascimento")
 	private Date dataNascimento;
