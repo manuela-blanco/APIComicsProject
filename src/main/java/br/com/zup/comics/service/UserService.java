@@ -50,16 +50,12 @@ public class UserService {
 	}
 	
 	public UserEntity create(User user) {
-		if(Objects.nonNull(user)) {
-			UserEntity userEntity = this.userRepository.findByCpfOrEmail(user.getCpf(), user.getEmail());
-			if(Objects.isNull(userEntity)) {
-				userEntity = this.converter.convert(user, UserEntity.class);
-				userRepository.save(userEntity);
-				return userEntity;
-			}
-			return null;
+		UserEntity userEntity = this.userRepository.findByCpfOrEmail(user.getCpf(), user.getEmail());
+		if(Objects.isNull(userEntity)) {
+			userEntity = this.converter.convert(user, UserEntity.class);
+			userRepository.save(userEntity);
+			return userEntity;
 		}
-		
 		return null;
 	}
 	
