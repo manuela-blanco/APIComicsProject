@@ -69,15 +69,18 @@ public class UserService {
 	}
 
 	public UserComicEntity associate(UserEntity userEntity, ComicEntity comicEntity) {
-		UserComicEntity uceFound = this.userComicRepository.findByIds(userEntity.getId(), comicEntity.getId());
-		if(Objects.isNull(uceFound)) {
-			UserComicEntity ucEntity = new UserComicEntity();
-			ucEntity.setComicId(comicEntity.getId());
-			ucEntity.setUserId(userEntity.getId());
-			this.userComicRepository.save(ucEntity);		
-			return ucEntity;
+		if(Objects.nonNull(userEntity) && Objects.nonNull(comicEntity)) {
+			UserComicEntity uceFound = this.userComicRepository.findByIds(userEntity.getId(), comicEntity.getId());
+			if(Objects.isNull(uceFound)) {
+				UserComicEntity ucEntity = new UserComicEntity();
+				ucEntity.setComicId(comicEntity.getId());
+				ucEntity.setUserId(userEntity.getId());
+				this.userComicRepository.save(ucEntity);		
+				return ucEntity;
+			}
+			return uceFound;
 		}
-		return uceFound;
+		return null;
 	}
 
 	public User findComicsAndAuthors(UserEntity userEntity) {
